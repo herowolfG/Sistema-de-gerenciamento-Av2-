@@ -8,15 +8,25 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+
+import sun.awt.image.PixelConverter.Bgrx;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButtonMenuItem;
 import java.awt.Color;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.ListSelectionModel;
 
 public class Jfuncionarios extends JFrame {
 
@@ -28,6 +38,8 @@ public class Jfuncionarios extends JFrame {
 	private JTextField tfIdade;
 	private JTextField tfEndereco;
 	private JTable table;
+	private FuncionarioDAO funcionario = new FuncionarioDAO();
+	private ButtonGroup bgp = new ButtonGroup();
 
 	/**
 	 * Launch the application.
@@ -113,6 +125,8 @@ public class Jfuncionarios extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setEnabled(false);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null},
@@ -124,11 +138,25 @@ public class Jfuncionarios extends JFrame {
 		scrollPane.setViewportView(table);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Funcionario");
+		rdbtnNewRadioButton.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (rdbtnNewRadioButton.isSelected()==true) {
+					funcionario.func.setCargo("Funcionario");
+				}
+			}
+		});
 		rdbtnNewRadioButton.setBackground(new Color(255, 255, 240));
 		rdbtnNewRadioButton.setBounds(37, 345, 109, 23);
 		contentPane.add(rdbtnNewRadioButton);
 		
 		JRadioButton rdbtnGerente = new JRadioButton("Gerente");
+		rdbtnGerente.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (rdbtnGerente.isSelected()==true) {
+					funcionario.func.setCargo("Gerente");
+				}
+			}
+		});
 		rdbtnGerente.setBackground(new Color(255, 255, 240));
 		rdbtnGerente.setBounds(148, 345, 73, 23);
 		contentPane.add(rdbtnGerente);
@@ -139,11 +167,27 @@ public class Jfuncionarios extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Registrar");
-		btnNewButton.setBounds(21, 322, 99, 36);
-		panel.add(btnNewButton);
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnRegistro = new JButton("Registrar");
+		btnRegistro.setBounds(21, 322, 99, 36);
+		panel.add(btnRegistro);
+		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				funcionario.func.setCpf(Integer.parseInt(tfCpf.getText()));
+				funcionario.func.setNome(tfNome.getText());
+				funcionario.func.setEndereco(tfEndereco.getText());
+				funcionario.func.setIdade(Integer.parseInt(tfIdade.getText()));
+				funcionario.func.setSalario(Float.parseFloat(tfSalario.getText()));
+				
+				if(funcionario.func.getCargo() == null) {
+					JOptionPane.showMessageDialog(null, "selecione um cargo");
+				}
+				else {
+				funcionario.registro(funcionario.func.getCpf(),funcionario.func.getNome(),funcionario.func.getSalario(),funcionario.func.getIdade(),funcionario.func.getEndereco(),funcionario.func.getCargo());
+				funcionario.lista(table);
+				
+			}
+				
 			}
 		});
 		
@@ -154,16 +198,37 @@ public class Jfuncionarios extends JFrame {
 		panel_1.setLayout(null);
 		
 		JButton btnAtualizar = new JButton("Atualizar");
-		btnAtualizar.setBounds(48, 11, 99, 36);
+		btnAtualizar.setBounds(10, 11, 99, 36);
 		panel_1.add(btnAtualizar);
 		
 		JButton btnDeletar = new JButton("Deletar");
-		btnDeletar.setBounds(169, 11, 99, 36);
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				funcionario.func.setCpf(Integer.parseInt(tfCpf.getText()));
+				
+				funcionario.excluir(String.valueOf(funcionario.func.getCpf()));
+				funcionario.lista(table);
+			}
+		});
+		btnDeletar.setBounds(119, 11, 99, 36);
 		panel_1.add(btnDeletar);
 		
 		JButton btnListar = new JButton("Listar");
-		btnListar.setBounds(286, 11, 99, 36);
+		btnListar.setBounds(228, 11, 99, 36);
 		panel_1.add(btnListar);
+		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				funcionario.Buscar(tfCpf.getText());
+				
+				tfCpf.setText(String.valueOf(funcionario.func.getCpf()));
+				tfNome.setText(funcionario.func.getNome());
+			}
+		});
+		btnBuscar.setBounds(337, 11, 99, 36);
+		panel_1.add(btnBuscar);
 		
 		JLabel lblNewLabel_1 = new JLabel("Registrar");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -176,7 +241,14 @@ public class Jfuncionarios extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		btnListar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				funcionario.lista(table);
 			}
+			
+			
 		});
+		
+		funcionario.lista(table);
+		bgp.add(rdbtnGerente);
+		bgp.add(rdbtnNewRadioButton);
 	}
 }
