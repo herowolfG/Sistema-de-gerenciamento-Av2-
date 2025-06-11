@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class JProduto extends JFrame {
 
@@ -26,6 +27,7 @@ public class JProduto extends JFrame {
 	private JTextField tfIdade;
 	private JTextField tfEndereco;
 	private JTable table;
+	private JTextField textField_1;
 
 	/**
 	 * Launch the application.
@@ -49,96 +51,128 @@ public class JProduto extends JFrame {
 	public JProduto() {
 		setTitle("Produtos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 594, 495);
+		setBounds(100, 100, 764, 561);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		tfCpf = new JTextField();
-		tfCpf.setBounds(27, 54, 184, 26);
-		contentPane.add(tfCpf);
-		tfCpf.setColumns(10);
-		
-		tfNome = new JTextField();
-		tfNome.setColumns(10);
-		tfNome.setBounds(27, 113, 184, 26);
-		contentPane.add(tfNome);
-		
-		tfSalario = new JTextField();
-		tfSalario.setColumns(10);
-		tfSalario.setBounds(27, 173, 184, 26);
-		contentPane.add(tfSalario);
-		
-		tfIdade = new JTextField();
-		tfIdade.setColumns(10);
-		tfIdade.setBounds(27, 233, 184, 26);
-		contentPane.add(tfIdade);
-		
-		tfEndereco = new JTextField();
-		tfEndereco.setColumns(10);
-		tfEndereco.setBounds(27, 289, 184, 26);
-		contentPane.add(tfEndereco);
-		
-		JLabel lblNewLabel = new JLabel("CPF");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(27, 30, 99, 26);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblNome = new JLabel("Nome");
-		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNome.setBounds(27, 91, 99, 26);
-		contentPane.add(lblNome);
-		
-		JLabel lblSalario = new JLabel("Salario");
-		lblSalario.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblSalario.setBounds(27, 148, 99, 26);
-		contentPane.add(lblSalario);
-		
-		JLabel lblIdade = new JLabel("Idade");
-		lblIdade.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblIdade.setBounds(27, 210, 99, 26);
-		contentPane.add(lblIdade);
-		
-		JLabel lblEndereo = new JLabel("Endereço");
-		lblEndereo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblEndereo.setBounds(27, 267, 99, 26);
-		contentPane.add(lblEndereo);
-		
-		JButton btnNewButton = new JButton("Registrar");
-		btnNewButton.setBounds(27, 326, 99, 36);
-		contentPane.add(btnNewButton);
-		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(231, 53, 337, 261);
+		scrollPane.setBounds(231, 53, 507, 385);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null},
+				{null, null, null, null, null, null},
 			},
 			new String[] {
-				"CPF", "Nome", "Salario", "Idade", "Endere\u00E7o"
+				"Codigo", "Nome", "Setor", "Valor", "Valor Original", "Fornecedor"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 255, 240));
+		panel.setBounds(10, 54, 218, 431);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Codigo");
+		lblNewLabel.setBounds(24, 0, 99, 26);
+		panel.add(lblNewLabel);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		tfCpf = new JTextField();
+		tfCpf.setBounds(24, 24, 184, 26);
+		panel.add(tfCpf);
+		tfCpf.setColumns(10);
+		
+		JLabel lblNome = new JLabel("Nome");
+		lblNome.setBounds(24, 61, 99, 26);
+		panel.add(lblNome);
+		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		tfNome = new JTextField();
+		tfNome.setBounds(24, 83, 184, 26);
+		panel.add(tfNome);
+		tfNome.setColumns(10);
+		
+		JLabel lblSalario = new JLabel("Setor");
+		lblSalario.setBounds(24, 118, 99, 26);
+		panel.add(lblSalario);
+		lblSalario.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		tfSalario = new JTextField();
+		tfSalario.setBounds(24, 143, 184, 26);
+		panel.add(tfSalario);
+		tfSalario.setColumns(10);
+		
+		JLabel lblIdade = new JLabel("Valor");
+		lblIdade.setBounds(24, 180, 99, 26);
+		panel.add(lblIdade);
+		lblIdade.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		tfIdade = new JTextField();
+		tfIdade.setBounds(24, 203, 184, 26);
+		panel.add(tfIdade);
+		tfIdade.setColumns(10);
+		
+		JLabel lblEndereo = new JLabel("Valor Original");
+		lblEndereo.setBounds(24, 237, 99, 26);
+		panel.add(lblEndereo);
+		lblEndereo.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		tfEndereco = new JTextField();
+		tfEndereco.setBounds(24, 259, 184, 26);
+		panel.add(tfEndereco);
+		tfEndereco.setColumns(10);
+		
+		JLabel lblFornecedor_1 = new JLabel("Fornecedor");
+		lblFornecedor_1.setBounds(24, 296, 99, 26);
+		panel.add(lblFornecedor_1);
+		lblFornecedor_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(24, 318, 184, 26);
+		panel.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JButton btnNewButton = new JButton("Registrar");
+		btnNewButton.setBounds(56, 384, 99, 36);
+		panel.add(btnNewButton);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(255, 255, 224));
+		panel_1.setBounds(231, 438, 507, 49);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
 		JButton btnAtualizar = new JButton("Atualizar");
-		btnAtualizar.setBounds(231, 326, 99, 36);
-		contentPane.add(btnAtualizar);
+		btnAtualizar.setBounds(87, 11, 99, 36);
+		panel_1.add(btnAtualizar);
 		
 		JButton btnDeletar = new JButton("Deletar");
-		btnDeletar.setBounds(352, 326, 99, 36);
-		contentPane.add(btnDeletar);
+		btnDeletar.setBounds(208, 11, 99, 36);
+		panel_1.add(btnDeletar);
 		
 		JButton btnListar = new JButton("Listar");
+		btnListar.setBounds(325, 11, 99, 36);
+		panel_1.add(btnListar);
+		
+		JLabel lblNewLabel_1 = new JLabel("Registrar");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_1.setBounds(74, 17, 100, 38);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Lista Dos Produtos");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_2.setBounds(399, 26, 166, 20);
+		contentPane.add(lblNewLabel_2);
 		btnListar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnListar.setBounds(469, 326, 99, 36);
-		contentPane.add(btnListar);
 	}
 }
