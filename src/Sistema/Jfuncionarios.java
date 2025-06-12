@@ -27,6 +27,8 @@ import java.awt.Color;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.ListSelectionModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Jfuncionarios extends JFrame {
 
@@ -44,18 +46,7 @@ public class Jfuncionarios extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Jfuncionarios frame = new Jfuncionarios();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
@@ -63,7 +54,7 @@ public class Jfuncionarios extends JFrame {
 	public Jfuncionarios() {
 		setTitle("Funcionarios");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 719, 483);
+		setBounds(100, 100, 719, 493);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -125,8 +116,23 @@ public class Jfuncionarios extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int linha = table.getSelectedRow();
+				
+				if (linha != -1) {
+		            tfCpf.setText(table.getValueAt(linha, 0).toString()); // Coluna 0: Nome
+		            tfNome.setText(table.getValueAt(linha, 1).toString());  // Coluna 1: CPF
+		            tfIdade.setText(table.getValueAt(linha, 2).toString()); // Coluna 2: Idade
+		            tfSalario.setText(table.getValueAt(linha, 3).toString());
+		            tfEndereco.setText(table.getValueAt(linha, 5).toString());    
+		        }
+				
+			}
+		});
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setEnabled(false);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null},
@@ -198,6 +204,24 @@ public class Jfuncionarios extends JFrame {
 		panel_1.setLayout(null);
 		
 		JButton btnAtualizar = new JButton("Atualizar");
+		btnAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				funcionario.func.setCpf(Integer.parseInt(tfCpf.getText()));
+				funcionario.func.setNome(tfNome.getText());
+				funcionario.func.setEndereco(tfEndereco.getText());
+				funcionario.func.setIdade(Integer.parseInt(tfIdade.getText()));
+				funcionario.func.setSalario(Float.parseFloat(tfSalario.getText()));
+				
+				if(funcionario.func.getCargo() == null) {
+					JOptionPane.showMessageDialog(null, "selecione um cargo");
+				}
+				else {
+				funcionario.Atualizar(funcionario.func.getCpf(),funcionario.func.getNome(),funcionario.func.getIdade(),funcionario.func.getSalario(),funcionario.func.getCargo(),funcionario.func.getEndereco());
+				funcionario.lista(table);
+				}
+			}
+		});
 		btnAtualizar.setBounds(10, 11, 99, 36);
 		panel_1.add(btnAtualizar);
 		
@@ -223,8 +247,10 @@ public class Jfuncionarios extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				funcionario.Buscar(tfCpf.getText());
 				
-				tfCpf.setText(String.valueOf(funcionario.func.getCpf()));
+				tfEndereco.setText(funcionario.func.getEndereco());
 				tfNome.setText(funcionario.func.getNome());
+				tfIdade.setText(String.valueOf(funcionario.func.getIdade()));
+				tfSalario.setText(String.valueOf(funcionario.func.getSalario()));
 			}
 		});
 		btnBuscar.setBounds(337, 11, 99, 36);
@@ -250,5 +276,16 @@ public class Jfuncionarios extends JFrame {
 		funcionario.lista(table);
 		bgp.add(rdbtnGerente);
 		bgp.add(rdbtnNewRadioButton);
+		
+		JButton btnNewButton = new JButton("Voltar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Inicio ini = new Inicio();
+				ini.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnNewButton.setBounds(47, 433, 89, 23);
+		contentPane.add(btnNewButton);
 	}
 }

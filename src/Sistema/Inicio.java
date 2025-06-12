@@ -11,13 +11,13 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Inicio extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField tfUsuario;
-	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -49,29 +49,40 @@ public class Inicio extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		tfUsuario = new JTextField();
-		tfUsuario.setBounds(107, 81, 250, 43);
-		contentPane.add(tfUsuario);
-		tfUsuario.setColumns(10);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(107, 236, 250, 43);
-		contentPane.add(textField);
-		
-		JLabel lblNewLabel = new JLabel("Usuario");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNewLabel.setBounds(107, 40, 137, 30);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblSenha = new JLabel("Senha");
-		lblSenha.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblSenha.setBounds(107, 195, 137, 30);
-		contentPane.add(lblSenha);
-		
-		JButton btnEntrar = new JButton("Entrar");
+		JButton btnEntrar = new JButton("Produtos");
+		btnEntrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JProduto prod = new JProduto();
+				prod.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnEntrar.setBounds(115, 88, 226, 43);
 		btnEntrar.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnEntrar.setBounds(146, 345, 175, 43);
 		contentPane.add(btnEntrar);
+		
+		JButton btnFuncionarios = new JButton("Funcionarios");
+		btnFuncionarios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Jfuncionarios func = new Jfuncionarios();
+				func.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnFuncionarios.setBounds(115, 183, 226, 43);
+		btnFuncionarios.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		contentPane.add(btnFuncionarios);
+		
+		JButton btnEntrar_1_1 = new JButton("Caixa");
+		btnEntrar_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JCaixa caixa = new JCaixa();
+				caixa.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnEntrar_1_1.setBounds(115, 278, 226, 43);
+		btnEntrar_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		contentPane.add(btnEntrar_1_1);
 	}
 }

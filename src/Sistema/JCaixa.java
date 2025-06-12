@@ -15,35 +15,30 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class JCaixa extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField txtSd;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField tfCodigo;
+	private JTextField tfValor;
+	private JTextField tfQuantia;
+	private JTextField tfNum;
+	private JTextField tfTotal;
+	private JTextField tfRecebido;
+	private JTextField tfTroco;
+	private CaixaDAO caixa = new CaixaDAO();
+	private int num = 1;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JCaixa frame = new JCaixa();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
@@ -63,9 +58,21 @@ public class JCaixa extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+					int linha = table.getSelectedRow();
+				
+					if (linha != -1) {
+						tfNum.setText(table.getValueAt(linha, 0).toString()); 
+						
+		        }	
+				
+				
+			}
+		});
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null},
 			},
 			new String[] {
 				"Num", "Codigo", "Valor", "Quantia"
@@ -85,52 +92,80 @@ public class JCaixa extends JFrame {
 		lblNewLabel.setBounds(10, 11, 115, 28);
 		panel.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(10, 37, 217, 20);
-		panel.add(textField);
-		textField.setColumns(10);
+		tfCodigo = new JTextField();
+		tfCodigo.setBounds(10, 37, 217, 20);
+		panel.add(tfCodigo);
+		tfCodigo.setColumns(10);
 		
 		JLabel lblValor = new JLabel("Valor");
 		lblValor.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblValor.setBounds(10, 107, 115, 28);
 		panel.add(lblValor);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 133, 217, 20);
-		panel.add(textField_1);
+		tfValor = new JTextField();
+		tfValor.setColumns(10);
+		tfValor.setBounds(10, 133, 217, 20);
+		panel.add(tfValor);
 		
 		JLabel lblQuantia = new JLabel("Quantia");
 		lblQuantia.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblQuantia.setBounds(10, 163, 115, 28);
 		panel.add(lblQuantia);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(10, 189, 217, 20);
-		panel.add(textField_2);
+		tfQuantia = new JTextField();
+		tfQuantia.setColumns(10);
+		tfQuantia.setBounds(10, 189, 217, 20);
+		panel.add(tfQuantia);
 		
-		JButton btnNewButton = new JButton("Adicionar");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBounds(10, 220, 115, 37);
-		panel.add(btnNewButton);
+		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				caixa.caixa.setCodigo(Integer.parseInt(tfCodigo.getText()));
+				caixa.caixa.setQuantia(Integer.parseInt(tfQuantia.getText()));
+				caixa.caixa.setValor(Float.parseFloat(tfValor.getText()));
+				
+				caixa.Adicionar(table, num);
+				tfTotal.setText(String.valueOf(caixa.caixa.getTotal()));
+				num++;
+				tfCodigo.setText("");
+				tfValor.setText("");
+				tfQuantia.setText("");
+				
+			}
+		});
+		btnAdicionar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnAdicionar.setBounds(10, 220, 115, 37);
+		panel.add(btnAdicionar);
 		
-		JButton btnNewButton_1 = new JButton("Pesquisar");
-		btnNewButton_1.setBounds(10, 68, 115, 28);
-		panel.add(btnNewButton_1);
+		JButton btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				caixa.Buscar(tfCodigo.getText());
+				tfValor.setText(String.valueOf(caixa.caixa.getValor()));
+			}
+		});
+		btnPesquisar.setBounds(10, 68, 115, 28);
+		panel.add(btnPesquisar);
 		
 		JLabel lblNum = new JLabel("Num");
 		lblNum.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblNum.setBounds(10, 268, 42, 20);
 		panel.add(lblNum);
 		
-		textField_3 = new JTextField();
-		textField_3.setEditable(false);
-		textField_3.setColumns(10);
-		textField_3.setBounds(10, 286, 69, 20);
-		panel.add(textField_3);
+		tfNum = new JTextField();
+		tfNum.setEditable(false);
+		tfNum.setColumns(10);
+		tfNum.setBounds(10, 286, 69, 20);
+		panel.add(tfNum);
 		
 		JButton btnNewButton_2 = new JButton("Deletar");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				caixa.Deletar(table, tfNum.getText());
+				tfTotal.setText(String.valueOf(caixa.caixa.getTotal()));
+			}
+		});
 		btnNewButton_2.setBounds(89, 285, 89, 23);
 		panel.add(btnNewButton_2);
 		
@@ -140,24 +175,24 @@ public class JCaixa extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
-		txtSd = new JTextField();
-		txtSd.setEditable(false);
-		txtSd.setHorizontalAlignment(SwingConstants.CENTER);
-		txtSd.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		txtSd.setBounds(10, 15, 122, 34);
-		panel_1.add(txtSd);
-		txtSd.setColumns(10);
+		tfTotal = new JTextField();
+		tfTotal.setEditable(false);
+		tfTotal.setHorizontalAlignment(SwingConstants.CENTER);
+		tfTotal.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		tfTotal.setBounds(10, 15, 122, 34);
+		panel_1.add(tfTotal);
+		tfTotal.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Total");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel_1.setBounds(142, 14, 79, 34);
 		panel_1.add(lblNewLabel_1);
 		
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		textField_4.setBounds(10, 82, 122, 34);
-		panel_1.add(textField_4);
-		textField_4.setColumns(10);
+		tfRecebido = new JTextField();
+		tfRecebido.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tfRecebido.setBounds(10, 82, 122, 34);
+		panel_1.add(tfRecebido);
+		tfRecebido.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Valor Recebido");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -165,15 +200,22 @@ public class JCaixa extends JFrame {
 		panel_1.add(lblNewLabel_2);
 		
 		JButton btnNewButton_3 = new JButton("Calcular");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				float resu = caixa.Troco(Float.parseFloat(tfTotal.getText()), Float.parseFloat(tfRecebido.getText()));
+				tfTroco.setText(String.valueOf(resu));
+			}
+		});
 		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnNewButton_3.setBounds(138, 89, 89, 23);
 		panel_1.add(btnNewButton_3);
 		
-		textField_5 = new JTextField();
-		textField_5.setEditable(false);
-		textField_5.setBounds(10, 143, 122, 24);
-		panel_1.add(textField_5);
-		textField_5.setColumns(10);
+		tfTroco = new JTextField();
+		tfTroco.setEditable(false);
+		tfTroco.setBounds(10, 143, 122, 24);
+		panel_1.add(tfTroco);
+		tfTroco.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Troco");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -181,8 +223,38 @@ public class JCaixa extends JFrame {
 		panel_1.add(lblNewLabel_3);
 		
 		JButton btnNewButton_4 = new JButton("Finalizar");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				caixa.registro(table);
+				
+			}
+		});
 		btnNewButton_4.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnNewButton_4.setBounds(471, 535, 126, 40);
 		contentPane.add(btnNewButton_4);
+		
+		JButton btnRegistro = new JButton("Registro");
+		btnRegistro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JRegistro ini = new JRegistro();
+				ini.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnRegistro.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnRegistro.setBounds(140, 535, 126, 40);
+		contentPane.add(btnRegistro);
+		
+		JButton btnNewButton = new JButton("Voltar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Inicio ini = new Inicio();
+				ini.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnNewButton.setBounds(10, 548, 89, 23);
+		contentPane.add(btnNewButton);
 	}
 }

@@ -23,10 +23,52 @@ public class FuncionarioDAO {
 	}
 	
 	
+	
+public void Atualizar(int cpf, String nome, int idade, float salario, String cargo, String endereco) {
+		
+		if(cpf == 0) {
+			JOptionPane.showMessageDialog(null, "Nenhum Cpf incontrado");
+		}
+		else {
+			
+		
+		try {
+			Connection com = BD.Faz_conexao();
+			
+			String slq = "update funcionario set Nome=?, Idade=?, Salario=?, Cargo=?, Endereco=? where CPF=?";
+			
+			PreparedStatement stmt = com.prepareStatement(slq);
+			
+			stmt.setString(1, nome);
+			stmt.setInt(2, idade);
+			stmt.setFloat(3, salario);
+			stmt.setString(4, cargo);
+			stmt.setString(5, endereco);
+			stmt.setInt(6, cpf);
+			
+			
+			stmt.execute();
+			stmt.close();
+			com.close();
+			
+			JOptionPane.showMessageDialog(null, "dados atualizados");
+			
+			
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		}
+		
+		
+		
+	}
+	
 	public void Buscar(String cpf) {
 		
 		if (cpf.equals("")) {
-			JOptionPane.showMessageDialog(null, "informe o id");
+			JOptionPane.showMessageDialog(null, "informe o Cpf");
 		}
 		else {
 		
@@ -41,21 +83,17 @@ public class FuncionarioDAO {
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			while (rs.next()) {
-				
-				if (rs.getString("CPF").equals(cpf)) {
-					func.setCpf(Integer.parseInt(rs.getString("CPF")));
-					func.setNome(rs.getString("Nome"));
-					func.setSalario(Float.parseFloat(rs.getString("Salario")));
-					func.setIdade(Integer.parseInt(rs.getString("Idade")));
-					func.setEndereco(rs.getString("Endereco"));
-					func.setCargo(rs.getString("Cargo"));
-				}		
-				if(rs.getString("CPF").equals(null)) {
-					JOptionPane.showMessageDialog(null, "n deu");
-				}
 			
-			}
+			if (rs.next()) {
+                func.setCpf(Integer.parseInt(rs.getString("CPF")));
+                func.setNome(rs.getString("Nome"));
+                func.setSalario(Float.parseFloat(rs.getString("Salario")));
+                func.setIdade(Integer.parseInt(rs.getString("Idade")));
+                func.setEndereco(rs.getString("Endereco"));
+                func.setCargo(rs.getString("Cargo"));
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhum dado encontrado com esse CPF.");
+            }
 			
 			rs.close();
 			com.close();
@@ -73,7 +111,7 @@ public class FuncionarioDAO {
 	public void excluir(String cpf) {
 		
 		if(cpf.equals("")) {
-			JOptionPane.showMessageDialog(null, "informe o id");
+			JOptionPane.showMessageDialog(null, "informe o Cpf");
 		}
 		else {
 			
@@ -147,24 +185,45 @@ public void registro(int cpf,String nome, float salario, int idade, String ender
 		
 		try {
 			Connection com = BD.Faz_conexao();
-			String sql = "insert into funcionario(CPF, Nome, Salario, Idade, Endereco, Cargo) values (?, ?, ?, ?, ?, ?)";
-			PreparedStatement stmt = com.prepareStatement(sql);
+			
+			 String SQL = "SELECT * FROM funcionario WHERE CPF = ?";
+	            PreparedStatement verificaStmt = com.prepareStatement(SQL);
+	            verificaStmt.setInt(1, cpf);
+	            ResultSet rs = verificaStmt.executeQuery();
+
+	            if (rs.next()) {
+	                JOptionPane.showMessageDialog(null, "CPF já cadastrado.");
+	            }else {
+			
+	            	SQL = "SELECT * FROM funcionario WHERE Cargo = ?";
+		            verificaStmt = com.prepareStatement(SQL);
+		            verificaStmt.setString(1, cargo);
+		            rs = verificaStmt.executeQuery();
+
+		            if (rs.next()) {
+		                JOptionPane.showMessageDialog(null, "Gerente já cadastrado.");
+		            }else {
 			
 			
-			stmt.setInt(1, cpf);
-			stmt.setString(2, nome);
-			stmt.setFloat(3, salario);
-			stmt.setInt(4, idade);
-			stmt.setString(5, endereco);
-			stmt.setString(6, cargo);
+		            	SQL = "insert into funcionario(CPF, Nome, Salario, Idade, Endereco, Cargo) values (?, ?, ?, ?, ?, ?)";
+		            	PreparedStatement stmt = com.prepareStatement(SQL);
 			
-			stmt.execute();
 			
-			stmt.close();
-			com.close();
+		            	stmt.setInt(1, cpf);
+		            	stmt.setString(2, nome);
+		            	stmt.setFloat(3, salario);
+		            	stmt.setInt(4, idade);
+		            	stmt.setString(5, endereco);
+		            	stmt.setString(6, cargo);
 			
-			JOptionPane.showMessageDialog(null, "Registro concluido com sucesso");
+		            	stmt.execute();
 			
+		            	stmt.close();
+		            	com.close();
+			
+		            	JOptionPane.showMessageDialog(null, "Registro concluido com sucesso");
+		            	}
+	            	}
 			
 			
 			
